@@ -1,5 +1,14 @@
-#canvas{
+#canvas {
     background-color: burlywood;
-    width: 500px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+body {
+    background-color: black;
 }
