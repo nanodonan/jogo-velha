@@ -2,8 +2,8 @@
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const CANVAS_WIDTH = 500
-const CANVAS_HEIGHT = 300
+const CANVAS_WIDTH = canvas.width = 600
+const CANVAS_HEIGHT = canvas.height = 600
 
 class Bolinha {
     constructor(x, y) {
@@ -11,25 +11,73 @@ class Bolinha {
         this.y = y
     }
     draw() {
-        console.log("THIS X e Y: ", this)
-        ctx.fillRect(this.x, this.y, 30, 30)
+        ctx.fillStyle = "blue"
+        ctx.font = "150px arial"
+        ctx.fillText("O", this.x, this.y)
     }
-
 }
 
-//ctx.fillStyle = "black"
-//ctx.fillRect(5,5,20,20)
+class Xis {
+    constructor(x, y) {
+        this.x = x
+        this.y = y
+    }
+    draw() {
+        ctx.fillStyle = "red"
+        ctx.font = "150px arial"
+        ctx.fillText("X", this.x, this.y)
+    }
+}
 
-ctx.font = "15px arial"
-//ctx.fillText("Hello World", 10,20)
+function drawLine(line) {
+    ctx.lineWidth = 10
+    ctx.beginPath();
+    ctx.moveTo(line.x1, line.y1);
+    ctx.lineTo(line.x2, line.y2);
+    ctx.stroke();
+}
+
+const linhas = [
+    {
+        x1: CANVAS_WIDTH / 3,
+        y1: 50,
+        x2: CANVAS_WIDTH / 3,
+        y2: CANVAS_HEIGHT - 50
+    },
+    {
+        x1: CANVAS_WIDTH - (CANVAS_WIDTH / 3),
+        y1: 50,
+        x2: CANVAS_WIDTH - (CANVAS_WIDTH / 3),
+        y2: CANVAS_HEIGHT - 50
+    },
+    {
+        x1: 50,
+        y1: CANVAS_HEIGHT / 3,
+        x2: CANVAS_WIDTH - 50,
+        y2: CANVAS_HEIGHT / 3
+    },
+    {
+        x1: 50,
+        y1: CANVAS_HEIGHT - (CANVAS_HEIGHT / 3),
+        x2: CANVAS_WIDTH - 50,
+        y2: CANVAS_HEIGHT - (CANVAS_HEIGHT / 3)
+    }
+]
+//desenhando o tabuleiro
+linhas.forEach(line => { drawLine(line) })
+
+window.addEventListener("auxclick", (e) => {
+    const pos = getMousePos(canvas, e)
+    const cel = setCel(pos)
+    const bolinha = new Bolinha(cel.x, cel.y)
+    bolinha.draw()
+})
 
 window.addEventListener("click", (e) => {
-    console.log("E: ", e)
-    //ctx.fillText("X", e.x, e.y)
     const pos = getMousePos(canvas, e)
-    console.log("POS: ", pos)
-    const bolinha = new Bolinha(pos.x, pos.y)
-    bolinha.draw()
+    const cel = setCel(pos)
+    const xis = new Xis(cel.x, cel.y)
+    xis.draw()
 })
 
 function getMousePos(canvas, evt) {
@@ -39,3 +87,21 @@ function getMousePos(canvas, evt) {
         y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
     };
 }
+function setCel(p) {
+    switch (true) {
+        case (p.x <= 200 && p.y <= 200): p.x = 70; p.y = 175; break;
+        case (p.x <= 400 && p.y <= 200): p.x = 250; p.y = 175; break;
+        case (p.x <= 600 && p.y <= 200): p.x = 420; p.y = 175; break;
+        case (p.x <= 200 && p.y <= 400): p.x = 70; p.y = 350; break;
+        case (p.x <= 400 && p.y <= 400): p.x = 250; p.y = 350; break;
+        case (p.x <= 600 && p.y <= 400): p.x = 420; p.y = 350; break;
+        case (p.x <= 200 && p.y <= 600): p.x = 70; p.y = 525; break;
+        case (p.x <= 400 && p.y <= 600): p.x = 250; p.y = 525; break;
+        case (p.x <= 600 && p.y <= 600): p.x = 420; p.y = 525; break;
+        default: break;
+    }
+    console.log("como ficou o P: ", p)
+    return p
+}
+
+

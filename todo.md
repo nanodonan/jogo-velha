@@ -1,7 +1,7 @@
 Tasks do jogo da velha
-- desenhar quadro
-- desenhar X e O no click
-- identificar click jogador
+X- desenhar quadro
+X- desenhar X e O no click
+X- identificar click jogador
 - identificar ganhador
 - atualizar hud
 
