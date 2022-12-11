@@ -5,15 +5,27 @@ const ctx = canvas.getContext("2d")
 const CANVAS_WIDTH = canvas.width = 600
 const CANVAS_HEIGHT = canvas.height = 600
 
+const pontosX = [70, 250, 420]
+const pontosY = [70, 250, 425]
+
+let jogador = 2
+
+const tabuleiro = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+]
+
 class Bolinha {
     constructor(x, y) {
         this.x = x
         this.y = y
     }
     draw() {
-        ctx.fillStyle = "blue"
-        ctx.font = "150px arial"
-        ctx.fillText("O", this.x, this.y)
+        ctx.strokeStyle = "blue"
+        ctx.beginPath();
+        ctx.arc(this.x + 50, this.y + 50, 60, 0, 2 * Math.PI);
+        ctx.stroke();
     }
 }
 
@@ -21,11 +33,13 @@ class Xis {
     constructor(x, y) {
         this.x = x
         this.y = y
+        this.length = 100
     }
     draw() {
-        ctx.fillStyle = "red"
-        ctx.font = "150px arial"
-        ctx.fillText("X", this.x, this.y)
+        ctx.strokeStyle = "red"
+        drawLine({ x1: this.x, y1: this.y, x2: this.x + this.length, y2: this.y + this.length })
+        drawLine({ x1: this.x, y1: this.y + this.length, x2: this.x + this.length, y2: this.y })
+
     }
 }
 
@@ -66,18 +80,22 @@ const linhas = [
 //desenhando o tabuleiro
 linhas.forEach(line => { drawLine(line) })
 
-window.addEventListener("auxclick", (e) => {
-    const pos = getMousePos(canvas, e)
-    const cel = setCel(pos)
-    const bolinha = new Bolinha(cel.x, cel.y)
-    bolinha.draw()
-})
 
 window.addEventListener("click", (e) => {
     const pos = getMousePos(canvas, e)
-    const cel = setCel(pos)
-    const xis = new Xis(cel.x, cel.y)
-    xis.draw()
+    updateTabuleiro(pos)
+    const posTab = pegaPosicaoClicada(pos)
+    
+    if (jogador === 1) {
+        const xis = new Xis(pontosX[posTab.y], pontosY[posTab.x])
+        xis.draw()
+        jogador = 2
+    } else {
+        const bolinha = new Bolinha(pontosX[posTab.y], pontosY[posTab.x])
+        bolinha.draw()
+        jogador = 1
+    }
+
 })
 
 function getMousePos(canvas, evt) {
@@ -87,21 +105,49 @@ function getMousePos(canvas, evt) {
         y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
     };
 }
-function setCel(p) {
+/*function setCel(pos) {
+    const p = { ...pos }
     switch (true) {
-        case (p.x <= 200 && p.y <= 200): p.x = 70; p.y = 175; break;
-        case (p.x <= 400 && p.y <= 200): p.x = 250; p.y = 175; break;
-        case (p.x <= 600 && p.y <= 200): p.x = 420; p.y = 175; break;
-        case (p.x <= 200 && p.y <= 400): p.x = 70; p.y = 350; break;
-        case (p.x <= 400 && p.y <= 400): p.x = 250; p.y = 350; break;
-        case (p.x <= 600 && p.y <= 400): p.x = 420; p.y = 350; break;
-        case (p.x <= 200 && p.y <= 600): p.x = 70; p.y = 525; break;
-        case (p.x <= 400 && p.y <= 600): p.x = 250; p.y = 525; break;
-        case (p.x <= 600 && p.y <= 600): p.x = 420; p.y = 525; break;
+        case (p.x <= 200 && p.y <= 200): p.x = 70; p.y = 70; break;
+        case (p.x <= 400 && p.y <= 200): p.x = 250; p.y = 70; break;
+        case (p.x <= 600 && p.y <= 200): p.x = 420; p.y = 70; break;
+        case (p.x <= 200 && p.y <= 400): p.x = 70; p.y = 250; break;
+        case (p.x <= 400 && p.y <= 400): p.x = 250; p.y = 250; break;
+        case (p.x <= 600 && p.y <= 400): p.x = 420; p.y = 250; break;
+        case (p.x <= 200 && p.y <= 600): p.x = 70; p.y = 425; break;
+        case (p.x <= 400 && p.y <= 600): p.x = 250; p.y = 425; break;
+        case (p.x <= 600 && p.y <= 600): p.x = 420; p.y = 425; break;
         default: break;
     }
-    console.log("como ficou o P: ", p)
     return p
+}
+*/
+
+function updateTabuleiro(pos) {
+    const posTab = pegaPosicaoClicada(pos)
+    tabuleiro[posTab.x][posTab.y] = 2
 }
 
 
+function pegaPosicaoClicada(pos) {
+    let resultadoX = -1
+    let resultadoY = -1
+    const range = {
+        0: [0, 200],
+        1: [200, 400],
+        2: [400, 600]
+    }
+    for (const key of Object.keys(range)) {
+        const min = range[key][0]
+        const max = range[key][1]
+        if (pos.y > min && pos.y < max) {
+            resultadoX = key
+        }
+        if (pos.x > min && pos.x < max) {
+            resultadoY = key
+        }
+
+    }
+
+    return { x: resultadoX, y: resultadoY }
+}
