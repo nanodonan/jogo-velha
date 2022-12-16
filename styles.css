@@ -2,13 +2,41 @@
     background-color: burlywood;
     width: 600px;
     height: 600px;
-
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 15%;  
+    border-radius: 15%;
+}
 
+#canvas2 {
+    background-color:  rgb(255, 142, 68);
+    width: 400px;
+    height: 200px;
+    position: absolute;
+    top: 30%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    border: double 7px;
+    border-radius: 10px;
+}
+
+#resset {
+    border-radius: 10px;
+    font: 30px arial;
+    width: 350px;
+    height: 45px;
+    background-color: rgb(255, 142, 68);
+    border: double 7px;
+    position: absolute;
+    top: 45%;
+    left: 70%;
+   }
+
+#resset:hover {
+    background-color: wheat;
+    color: black;
+    -webkit-text-stroke-width: 1.5px;
 }
 
 body {
